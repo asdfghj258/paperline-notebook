@@ -5,9 +5,14 @@ export function worldPoint(
   viewport: Note["viewport"],
 ): Point {
   const r = canvas.getBoundingClientRect();
+  // canvas.width/height are backing-store pixels (DPR-scaled), while pointer
+  // coordinates and the viewport transform use CSS pixels. Mixing the two
+  // causes large offsets on Retina/iPad displays, especially after zooming.
+  const cssX = (e.clientX - r.left) * (canvas.clientWidth / r.width);
+  const cssY = (e.clientY - r.top) * (canvas.clientHeight / r.height);
   return {
-    x: (e.clientX - r.left - canvas.width / 2) / viewport.zoom - viewport.x,
-    y: (e.clientY - r.top - canvas.height / 2) / viewport.zoom - viewport.y,
+    x: (cssX - canvas.clientWidth / 2) / viewport.zoom - viewport.x,
+    y: (cssY - canvas.clientHeight / 2) / viewport.zoom - viewport.y,
   };
 }
 export function renderCanvas(canvas: HTMLCanvasElement, note: Note) {
