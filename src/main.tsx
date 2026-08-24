@@ -5,7 +5,9 @@ import "./styles.css";
 import "./backup.css";
 
 if ("serviceWorker" in navigator)
-  navigator.serviceWorker.register("/sw.js").catch(() => undefined);
+  navigator.serviceWorker
+    .register(`${import.meta.env.BASE_URL}sw.js`)
+    .catch(() => undefined);
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
